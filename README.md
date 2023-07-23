@@ -3,7 +3,7 @@
 ## Quick Notes
 Build
 <br />
-`sam deploy`
+`sam build`
 
 Invoke (locally)
 <br />
