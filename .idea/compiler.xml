@@ -9,5 +9,8 @@
         <module name="HelloWorld" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="DynamoDBJ2" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
