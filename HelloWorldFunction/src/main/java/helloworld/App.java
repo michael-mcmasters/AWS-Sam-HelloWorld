@@ -24,7 +24,7 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         try {
-            String version = "13";
+            String version = "15";
             System.out.println("Version " + version);
 
             String apiKey = input.getHeaders().get("auth-token");
