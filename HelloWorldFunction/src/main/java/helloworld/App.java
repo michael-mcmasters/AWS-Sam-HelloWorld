@@ -13,27 +13,28 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
  */
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
+    private static final String version = "18";
     private AuthenticationService authenticationService;
-    private DynamoDbService dynamoDbService;
+    private samJavaTableService samJavaTableService;
 
 
     public App() {
         this.authenticationService = new AuthenticationService();
-        this.dynamoDbService = new DynamoDbService();
+        this.samJavaTableService = new samJavaTableService();
     }
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         try {
-            String version = "15";
-            System.out.println("Version " + version);
+            System.out.println("Lambda received request for API version " + version);
 
             String apiKey = input.getHeaders().get("auth-token");
             System.out.println("API key is " + apiKey);
-            if (apiKey == null || !authenticationService.authenticateApiKey(apiKey)) {
+            if (!authenticationService.userIsAuthorized(apiKey)) {
                 throw new Exception("Authentication failed for API");
             }
 
-            dynamoDbService.saveExample();
+            samJavaTableService.save("id", version);
+//            samJavaTableService.save("version", version);
             System.out.println("Completed saving to DynamoDb");
 
             String body = String.format("{ \"message\": \"hello world\", \"version\": \"%s\" }", version);
@@ -43,7 +44,7 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
             System.out.println(ex);
             return generateResponse(false, "{}");
         } finally {
-            System.out.println("Completed request");
+            System.out.println("Completed processing request");
         }
     }
 
@@ -59,44 +60,9 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
 
         if (successful) {
-            return response
-                    .withStatusCode(200)
-                    .withBody(body);
+            return response.withStatusCode(200).withBody(body);
         } else {
-            return response
-                    .withBody(body)
-                    .withStatusCode(500);
+            return response.withBody(body).withStatusCode(500);
         }
     }
-
-//    public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
-//        String version = "7";
-//        System.out.println("Version " + version);
-//
-//        try {
-//            dynamoDbService.saveExample();
-//            System.out.println("Saved successfully!");
-//        } catch (Exception ex) {
-//            System.out.println("Exception writing to DynamoDb. Exception is ...");
-//            System.out.println(ex);
-//        }
-//
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("Content-Type", "application/json");
-//        headers.put("X-Custom-Header", "application/json");
-//
-//        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-//                .withHeaders(headers);
-//        try {
-//            String output = String.format("{ \"message\": \"hello world\", \"version\": \"%s\" }", version);
-//
-//            return response
-//                    .withStatusCode(200)
-//                    .withBody(output);
-//        } catch (Exception e) {
-//            return response
-//                    .withBody("{}")
-//                    .withStatusCode(500);
-//        }
-//    }
 }

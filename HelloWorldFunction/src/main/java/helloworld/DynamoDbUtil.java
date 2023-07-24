@@ -32,7 +32,7 @@ public class DynamoDbUtil {
     }
 
     // Saves the given params to the database
-    public static void save(String tableName, HashMap<String, AttributeValue> itemValues) {
+    public static void write(String tableName, HashMap<String, AttributeValue> itemValues) {
         DynamoDbClient ddb = openDynamoClient();
         try {
             PutItemRequest request = PutItemRequest.builder()
