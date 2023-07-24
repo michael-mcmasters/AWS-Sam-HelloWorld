@@ -49,10 +49,10 @@ public class DynamoDbService {
             } catch (ResourceNotFoundException e) {
                 System.err.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
                 System.err.println("Be sure that it exists and that you've typed its name correctly!");
-                System.exit(1);
+                throw e;
             } catch (DynamoDbException e) {
                 System.err.println(e.getMessage());
-                System.exit(1);
+                throw e;
             }
         } catch (Exception ex) {
             System.out.println("Exception while saving to DynamoDB. Exception is...");

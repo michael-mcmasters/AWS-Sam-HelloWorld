@@ -15,9 +15,9 @@ Resources:
   AuthenticationTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
-      TableName: authentication
+      TableName: api-key-authentication
       PrimaryKey:
-        Name: id
+        Name: apiKey
         Type: String
   Table:
     Type: AWS::Serverless::SimpleTable # More info about SimpleTable Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-simpletable.html
@@ -38,6 +38,7 @@ Resources:
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
           PARAM1: VALUE
+          AUTHENTICATION_TABLE: !Ref AuthenticationTable
           TABLE_NAME: !Ref Table
       Events:
         HelloWorld:
@@ -48,6 +49,8 @@ Resources:
       Policies:
         - DynamoDBWritePolicy: # More info about SAM policy templates: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
             TableName: !Ref Table
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AuthenticationTable  # Gives full access (Read, Write, Etc)
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

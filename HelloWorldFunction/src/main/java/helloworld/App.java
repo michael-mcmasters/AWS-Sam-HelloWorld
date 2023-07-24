@@ -1,44 +1,37 @@
 package helloworld;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.amazonaws.services.lambda.runtime.events.CloudFrontEvent;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.*;
 
 /**
  * Handler for requests to Lambda function.
  */
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
+    private AuthenticationService authenticationService;
     private DynamoDbService dynamoDbService;
 
 
     public App() {
+        this.authenticationService = new AuthenticationService();
         this.dynamoDbService = new DynamoDbService();
     }
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         try {
-            String version = "10";
+            String version = "13";
             System.out.println("Version " + version);
 
             String apiKey = input.getHeaders().get("auth-token");
             System.out.println("API key is " + apiKey);
+            if (apiKey == null || !authenticationService.authenticateApiKey(apiKey)) {
+                throw new Exception("Authentication failed for API");
+            }
 
             dynamoDbService.saveExample();
             System.out.println("Completed saving to DynamoDb");
@@ -49,6 +42,8 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
             System.out.println("Exception in handler. Exception is...");
             System.out.println(ex);
             return generateResponse(false, "{}");
+        } finally {
+            System.out.println("Completed request");
         }
     }
 
