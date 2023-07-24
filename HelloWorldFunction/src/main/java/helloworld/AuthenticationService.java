@@ -7,23 +7,25 @@ import java.util.Map;
 
 public class AuthenticationService {
 
-    private String tableName;
+    private final String tableName;
+    private final String tableKey;
 
     public AuthenticationService() {
         this.tableName = System.getenv("AUTHENTICATION_TABLE");
+        this.tableKey = "apiKey";
         System.out.println("tableName is " + tableName);
     }
 
-    public boolean userIsAuthorized(String apiKey) {
+    public boolean userIsAuthorized(String apiKeyValue) {
         try {
             System.out.println("Processing if user is authorized");
-            if (apiKey == null) {
-                System.out.println("apiKey is null. User is not authorized");
+            if (apiKeyValue == null) {
+                System.out.println("apiKeyValue is null. User is not authorized");
                 return false;
             }
 
             Map<String, AttributeValue> keyToGet = new HashMap<>();
-            keyToGet.put("apiKey", AttributeValue.builder().s("abc1233").build());
+            keyToGet.put(tableKey, AttributeValue.builder().s(apiKeyValue).build());
             Map<String, AttributeValue> returnedItem = DynamoDbUtil.read(tableName, keyToGet);
             AttributeValue value = returnedItem.get("apiKey");
             boolean authenticated = false;

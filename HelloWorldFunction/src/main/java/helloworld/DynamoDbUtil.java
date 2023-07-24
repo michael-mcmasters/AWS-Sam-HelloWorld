@@ -28,6 +28,8 @@ public class DynamoDbUtil {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             throw e;
+        } finally {
+            ddb.close();
         }
     }
 

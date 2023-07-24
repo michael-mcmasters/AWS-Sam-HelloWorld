@@ -13,7 +13,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
  */
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private static final String version = "18";
+    private static final String version = "20";
     private AuthenticationService authenticationService;
     private samJavaTableService samJavaTableService;
 
