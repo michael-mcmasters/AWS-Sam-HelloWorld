@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/HelloWorldFunction/HelloWorld.iml" filepath="$PROJECT_DIR$/HelloWorldFunction/HelloWorld.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sam-java.iml" filepath="$PROJECT_DIR$/.idea/sam-java.iml" />
     </modules>
   </component>
