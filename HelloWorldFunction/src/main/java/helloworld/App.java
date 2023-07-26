@@ -11,11 +11,15 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 /**
  * Handler for requests to Lambda function.
  */
-//@SLF4j
+//@Slf4j
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private static final String version = "21";
+//    private Logger Log = LoggerFactory.getLogger(App.class);
+
+    private static final String version = "26";
+
     private AuthenticationService authenticationService;
+
     private samJavaTableService samJavaTableService;
 
 
@@ -26,26 +30,25 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         try {
-            System.out.println("Lambda received request for API version " + version);
+            Log.info("Lambda received request for API version " + version);
 
             String apiKey = input.getHeaders().get("auth-token");
-            System.out.println("API key is " + apiKey);
+            Log.info("API key is " + apiKey);
             if (!authenticationService.userIsAuthorized(apiKey)) {
                 throw new Exception("Authentication failed for API");
             }
 
             samJavaTableService.save("id", version);
 //            samJavaTableService.save("version", version);
-            System.out.println("Completed saving to DynamoDb");
+            Log.info("Completed saving to DynamoDb");
 
             String body = String.format("{ \"message\": \"hello world\", \"version\": \"%s\" }", version);
             return generateResponse(true, body);
         } catch (Exception ex) {
-            System.out.println("Exception in handler. Exception is...");
-            System.out.println(ex);
+            Log.info("Exception in handler", ex);
             return generateResponse(false, "{}");
         } finally {
-            System.out.println("Completed processing request");
+            Log.info("Completed processing request");
         }
     }
 

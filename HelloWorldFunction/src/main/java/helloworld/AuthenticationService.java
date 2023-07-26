@@ -7,20 +7,24 @@ import java.util.Map;
 
 public class AuthenticationService {
 
+//    private Logger log = LoggerFactory.getLogger(AuthenticationService.class);
+
     private final String tableName;
+
     private final String tableKey;
+
 
     public AuthenticationService() {
         this.tableName = System.getenv("AUTHENTICATION_TABLE");
         this.tableKey = "apiKey";
-        System.out.println("tableName is " + tableName);
+        Log.info("tableName is " + tableName);
     }
 
     public boolean userIsAuthorized(String apiKeyValue) {
         try {
-            System.out.println("Processing if user is authorized");
+            Log.info("Processing if user is authorized");
             if (apiKeyValue == null) {
-                System.out.println("apiKeyValue is null. User is not authorized");
+                Log.info("apiKeyValue is null. User is not authorized");
                 return false;
             }
 
@@ -30,20 +34,20 @@ public class AuthenticationService {
             AttributeValue value = returnedItem.get("apiKey");
             boolean authenticated = false;
             if (value == null) {
-                System.out.println("Value is null");
+                Log.info("Value is null");
                 authenticated = false;
             } else {
-                System.out.println("value.s() is " + value.s());
+                Log.info("value.s() is " + value.s());
                 if (value.s().length() > 0) {
                     authenticated = true;
                 } else {
                     authenticated = false;
                 }
             }
-            System.out.println("Finished processing if user is authenticated. Authenticated: " + authenticated);
+            Log.info("Finished processing if user is authenticated. Authenticated: " + authenticated);
             return authenticated;
         } catch (Exception ex) {
-            System.out.println("Exception while processing if user is authenticated");
+            Log.info("Exception while processing if user is authenticated", ex);
             return false;
         }
     }

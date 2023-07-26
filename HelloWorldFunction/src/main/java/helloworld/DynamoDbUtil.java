@@ -10,6 +10,9 @@ import java.util.Set;
 
 public class DynamoDbUtil {
 
+//    private static Logger log = LoggerFactory.getLogger(DynamoDbUtil.class);
+
+
     // keyToGet: Key name (apiKey), key value (78a16add-fa3e-4921-904b-89dd867660b6)
     public static Map<String, AttributeValue> read(String tableName, Map<String, AttributeValue> keyToGet) {
         DynamoDbClient ddb = openDynamoClient();
@@ -20,13 +23,13 @@ public class DynamoDbUtil {
         try {
             Map<String, AttributeValue> returnedItem = ddb.getItem(request).item();
             Set<String> keys = returnedItem.keySet();
-            System.out.println("Amazon DynamoDB table attributes: \n");
+            Log.info("Amazon DynamoDB table attributes: \n");
             for (String key1 : keys) {
-                System.out.println(String.format("Key: {%s}, Value: {%s}", key1, returnedItem.get(key1).toString()));
+                Log.info(String.format("Key: {%s}, Value: {%s}", key1, returnedItem.get(key1).toString()));
             }
             return returnedItem;
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            Log.info("Exception reading from database", e);
             throw e;
         } finally {
             ddb.close();
@@ -43,18 +46,16 @@ public class DynamoDbUtil {
                     .build();
             try {
                 PutItemResponse response = ddb.putItem(request);
-                System.out.println(tableName +" was successfully updated. The request id is "+response.responseMetadata().requestId());
+                Log.info(tableName + " was successfully updated. The request id is " +response.responseMetadata().requestId());
             } catch (ResourceNotFoundException e) {
-                System.err.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
-                System.err.println("Be sure that it exists and that you've typed its name correctly!");
+                Log.info(String.format("Error: The Amazon DynamoDB table \"{}\" can't be found.\n", tableName));
                 throw e;
             } catch (DynamoDbException e) {
-                System.err.println(e.getMessage());
+                Log.info("Exception writing to database", e);
                 throw e;
             }
         } catch (Exception ex) {
-            System.out.println("Exception while saving to DynamoDB. Exception is...");
-            System.out.println(ex);
+            Log.info("Exception while saving to DynamoDB.", ex);
         } finally {
             ddb.close();
         }
