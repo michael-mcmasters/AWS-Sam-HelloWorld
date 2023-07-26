@@ -11,9 +11,10 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 /**
  * Handler for requests to Lambda function.
  */
+//@SLF4j
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private static final String version = "20";
+    private static final String version = "21";
     private AuthenticationService authenticationService;
     private samJavaTableService samJavaTableService;
 
