@@ -4,14 +4,12 @@ import software.amazon.awssdk.services.dynamodb.model.*;
 
 import java.util.HashMap;
 
-public class samJavaTableService {
-
-//    private Logger log = LoggerFactory.getLogger(samJavaTableService.class);
+public class SamJavaTableService {
 
     private String tableName;
 
 
-    public samJavaTableService() {
+    public SamJavaTableService() {
         this.tableName = System.getenv("TABLE_NAME");
         Log.info("tableName is " + tableName);
     }

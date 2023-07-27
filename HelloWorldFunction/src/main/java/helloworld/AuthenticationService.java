@@ -7,8 +7,6 @@ import java.util.Map;
 
 public class AuthenticationService {
 
-//    private Logger log = LoggerFactory.getLogger(AuthenticationService.class);
-
     private final String tableName;
 
     private final String tableKey;

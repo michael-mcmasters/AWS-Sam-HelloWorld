@@ -10,8 +10,6 @@ import java.util.Set;
 
 public class DynamoDbUtil {
 
-//    private static Logger log = LoggerFactory.getLogger(DynamoDbUtil.class);
-
 
     // keyToGet: Key name (apiKey), key value (78a16add-fa3e-4921-904b-89dd867660b6)
     public static Map<String, AttributeValue> read(String tableName, Map<String, AttributeValue> keyToGet) {

@@ -11,21 +11,18 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 /**
  * Handler for requests to Lambda function.
  */
-//@Slf4j
 public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-
-//    private Logger Log = LoggerFactory.getLogger(App.class);
 
     private static final String version = "26";
 
     private AuthenticationService authenticationService;
 
-    private samJavaTableService samJavaTableService;
+    private SamJavaTableService samJavaTableService;
 
 
     public App() {
         this.authenticationService = new AuthenticationService();
-        this.samJavaTableService = new samJavaTableService();
+        this.samJavaTableService = new SamJavaTableService();
     }
 
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
