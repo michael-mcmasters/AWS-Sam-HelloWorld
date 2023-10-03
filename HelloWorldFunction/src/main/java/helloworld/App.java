@@ -36,7 +36,7 @@ public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatew
             }
 
             samJavaTableService.save("id", version);
-//            samJavaTableService.save("version", version);
+//          samJavaTableService.save("version", version);
             Log.info("Completed saving to DynamoDb");
 
             String body = String.format("{ \"message\": \"hello world\", \"version\": \"%s\" }", version);
